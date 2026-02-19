@@ -45,17 +45,70 @@
  *   // => [{ rating: 5 }, { rating: 3 }]
  */
 export function createFilter(field, operator, value) {
-  // Your code here
+
+  if (!["<", ">", "<=", ">=", "==="].includes(operator)) {
+    return () => false;
+  }
+
+  return function (obj) {
+
+    const fieldValue = obj[field];
+
+    if (operator === ">") return fieldValue > value;
+    if (operator === "<") return fieldValue < value;
+    if (operator === ">=") return fieldValue >= value;
+    if (operator === "<=") return fieldValue <= value;
+    if (operator === "===") return fieldValue === value;
+
+  };
 }
 
 export function createSorter(field, order = "asc") {
-  // Your code here
-}
+
+  return function (a,b) {
+   
+    const valA = a[field]
+    const valB = b[field]
+    
+    if (typeof valA === "string" && typeof valB === "string") {
+      return order === "asc"
+      ? valA.localeCompare(valB) : valB.localeCompare(valA) 
+    }
+    
+    if (typeof valA === "number" && typeof valB === "number") {
+      return order === "asc" ? valA - valB : valB - valA 
+    }
+  }
+}  
 
 export function createMapper(fields) {
-  // Your code here
+
+  return function (obj) {
+
+    const result = {};
+
+    for (const field of fields) {
+      if (field in obj) {
+        result[field] = obj[field];
+      }
+    }
+    return result;
+  };
 }
 
 export function applyOperations(data, ...operations) {
-  // Your code here
+
+  if (!Array.isArray(data)) {
+    return [];
+  }
+
+  let result = data;
+
+  for (const op of operations) {
+    if (typeof op === "function") {
+      result = op(result);
+    }
+  }
+
+  return result;
 }

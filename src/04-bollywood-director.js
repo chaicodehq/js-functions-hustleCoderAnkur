@@ -45,13 +45,90 @@
  *   pricer("gold", true)  // => 200 * 1.5 * 1.3 = 390
  */
 export function createDialogueWriter(genre) {
-  // Your code here
+if (genre !== "action" && genre !== "romance" && genre !== "comedy" && genre !== "drama" ) {
+  return null
+}
+  return function (hero, villain) {
+    
+    if (!hero || !villain) {
+      return "..."
+    }
+    
+    if (genre === "action") {
+      return `${hero} says: 'Tujhe toh main dekh lunga, ${villain}!'`
+    }
+    else if (genre === "romance") {
+      return `${hero} whispers: '${villain}, tum mere liye sab kuch ho'`
+    }
+    else if (genre === "comedy") {
+      return `${hero} laughs: '${villain} bhai, kya kar rahe ho yaar!'`
+    }
+    else if (genre === "drama") {
+      return `${hero} cries: '${villain}, tune mera sab kuch cheen liya!'`
+    }   
+  }
 }
 
 export function createTicketPricer(basePrice) {
-  // Your code here
+
+  if (basePrice <= 0) {
+    return null
+  }
+  let base;
+
+  return function (seatType, isWeekend) {
+
+  if (seatType !== "silver" && seatType !== "gold" && seatType !=="platinum") {
+    return null
+  }
+
+    if (seatType === "silver") {
+      base =  Math.ceil(basePrice * 1)
+
+      if (isWeekend) {
+      return Math.ceil(base * 1.3)
+      }
+      return base
+      
+    } else if(seatType === "gold") {
+      base = Math.ceil(basePrice*1.5)
+      
+      if (isWeekend) {
+        return Math.ceil(base * 1.3)
+      }
+      return base
+
+    } else if (seatType === "platinum") {
+      base = Math.ceil(basePrice*2)
+    
+      if (isWeekend) {
+        return Math.ceil(base * 1.3)
+      }
+      return base
+    }
+  }
 }
 
 export function createRatingCalculator(weights) {
-  // Your code here
+
+  if (!weights || typeof weights !== "object") {
+    return null;
+  }
+
+  return (scores) => {
+
+    if (!scores || typeof scores !== "object") {
+      return 0;
+    }
+
+    let total = 0;
+
+    for (let key in weights) {
+      if (key in scores) {
+        total += weights[key] * scores[key];
+      }
+    }
+
+    return Number(total.toFixed(1));
+  };
 }
